@@ -10,32 +10,32 @@
       <div class="flex-1">
         <el-scrollbar>
           <el-menu
+            default-active="2"
             class="aside-menu"
-            :default-active="defaultActiveMenu"
             :collapse="isCollapse"
-            :default-openeds="defaultOpeneds"
             background-color="rgba(0,0,0,0)"
             text-color="#fff"
             active-text-color="#409EFF"
+            @open="handleOpen"
+            @close="handleClose"
           >
-            <el-sub-menu
-              v-for="item in userAuthMenus"
-              :key="item.name"
-              :index="item.name"
-            >
+            <el-sub-menu index="1">
               <template #title>
                 <el-icon><location /></el-icon>
-                <span>{{ item.title }}</span>
+                <span>Navigator One</span>
               </template>
-              <template v-if="item.children && item.children.length">
-                <el-menu-item
-                  v-for="subitem in item.children"
-                  :key="subitem.name"
-                  :index="subitem.name"
-                  @click="changeActiveMenu"
-                  >{{ subitem.title }}</el-menu-item
-                >
-              </template>
+              <el-menu-item-group>
+                <template #title><span>Group One</span></template>
+                <el-menu-item index="1-1">item one</el-menu-item>
+                <el-menu-item index="1-2">item two</el-menu-item>
+              </el-menu-item-group>
+              <el-menu-item-group title="Group Two">
+                <el-menu-item index="1-3">item three</el-menu-item>
+              </el-menu-item-group>
+              <el-sub-menu index="1-4">
+                <template #title><span>item four</span></template>
+                <el-menu-item index="1-4-1">item one</el-menu-item>
+              </el-sub-menu>
             </el-sub-menu>
           </el-menu>
         </el-scrollbar>
@@ -48,7 +48,7 @@
           <Expand v-show="isCollapse" />
         </el-icon>
         <div class="flex-1 header-title">
-          {{ systemTitle }}
+          {{ systemTitle }} {{ isCollapse }}
         </div>
         <el-dropdown @command="handleCommand">
           <div class="flex-row-center el-dropdown-link">
@@ -67,28 +67,32 @@
           </template>
         </el-dropdown>
       </el-header>
-      <el-row>
+      <!-- <el-row>
+        <el-col :span="24">123</el-col>
+      </el-row> -->
+      <el-main class="layout-main">
         <el-tabs
           class="fill-wrapper"
           type="card"
-          :model-value="activePageName"
-          @tab-click="changeActiveTab"
-          @tab-remove="removeOpenPage"
+          v-model="activeName"
+          @tab-click="handleClick"
         >
           <el-tab-pane
             class="fill-wrapper"
-            v-for="item in openPages"
-            :key="item.name"
-            :closable="!isHomePage(item)"
-            :label="isHomePage(item) ? '首页' : item.meta.name"
-            :name="item.name"
-          />
+            :closable="false"
+            label="首页"
+            name="first"
+          >
+            <!-- <el-scrollbar> -->
+            <router-view />
+            <!-- </el-scrollbar> -->
+          </el-tab-pane>
+          <el-tab-pane closable label="Config" name="second"
+            >Config</el-tab-pane
+          >
+          <el-tab-pane closable label="Role" name="third">Role</el-tab-pane>
+          <el-tab-pane closable label="Task" name="fourth">Task</el-tab-pane>
         </el-tabs>
-      </el-row>
-      <el-main class="layout-main">
-        <el-scrollbar>
-          <router-view />
-        </el-scrollbar>
       </el-main>
     </el-container>
   </el-container>
@@ -96,7 +100,6 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
 import { websiteConfig } from '@/util/websiteConfig';
 
 export default defineComponent({
@@ -106,37 +109,20 @@ export default defineComponent({
       avatarUrl: '',
       systemTitle: websiteConfig.enterpriseName + websiteConfig.systemName,
       isCollapse: false,
-      defaultActiveMenu: '', // 默认活动的菜单
-      defaultOpeneds: [] // 默认打开的菜单
+      activeName: 'first'
     };
   },
-  created() {
-    const defaultRouteName = this.$route.name;
-    this.$store.dispatch('user/doLogin');
-    this.defaultActiveMenu = defaultRouteName;
-    this.defaultOpeneds = this.openPages.map((item) => item.name);
-  },
-  computed: {
-    ...mapGetters(['openPages', 'userAuthMenus', 'activePageName'])
-  },
   methods: {
-    ...mapMutations('system', ['removeOpenPage']),
-    isHomePage(data) {
-      return data.name === 'home';
-    },
     handleCommand(val) {
       console.log(val);
     },
+    handleOpen() {},
+    handleClose() {},
     changeMenuCollapse() {
       this.isCollapse = !this.isCollapse;
+      // isCollapse
     },
-    changeActiveTab({ paneName, active }) {
-      if (active) return false;
-      this.$router.replace({ name: paneName });
-    },
-    changeActiveMenu({ index }) {
-      this.$router.replace({ name: index });
-    }
+    handleClick() {}
   }
 });
 </script>
