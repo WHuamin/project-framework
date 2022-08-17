@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import { ERROR_CONFIG } from '@/constant/error.js';
+import { getErrorPageInfo } from '@/constant/error.js';
 export default {
   name: 'page-error',
   computed: {
     errorData() {
-      return ERROR_CONFIG[this.$route.params.id || '404'];
+      return getErrorPageInfo(this.$route.params.id || '404');
     }
   }
 };

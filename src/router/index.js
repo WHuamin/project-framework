@@ -1,46 +1,24 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import store from '@/store/index.js';
-import Layout from '@/views/layout';
-import { getAuthRoutes } from '@/constant/routes/index.js';
-import { NoLoginPages } from '@/constant/routes/routerUtils.js';
+import { getAuthRoutes } from '@/constant/routes/index';
+import { NoLoginPages } from '@/constant/routes/routerUtils';
+import staticRoutes from '@/constant/routes/staticRoutes';
 
 let isF = false; // 这个是用于判断动态路由是否已经被获取
 
-const routes = [
-  {
-    path: '/',
-    name: 'layout',
-    component: Layout,
-    meta: { name: '首页' },
-    children: [
-      {
-        path: '',
-        name: 'home',
-        meta: { name: '首页' },
-        component: () => import('../views/home/index.vue')
-      }
-    ]
-  },
-  {
-    path: '/login',
-    name: 'login',
-    meta: { name: '登录' },
-    component: () => import('../views/login/index.vue')
-  },
-  {
-    path: '/error/:id',
-    name: 'error',
-    component: () => import('../views/error')
-  }
-];
-
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),
-  routes
+  routes: staticRoutes
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (store.getters.token) {
+  if (!store.getters.token) {
+    if (to.name === 'login') {
+      next();
+    } else {
+      next({ name: 'login' });
+    }
+  } else {
     if (isF) {
       updatePages(to);
       if (to.name === 'login') {
@@ -64,12 +42,9 @@ router.beforeEach(async (to, from, next) => {
       res.forEach((item) => {
         router.addRoute(item.parentRoute, item);
       });
-
       // 更改控制生成路由次数的值
       isF = true;
-
       updatePages(to);
-
       // 跳转
       // 确保addRoute()时动态添加的路由已经被完全加载上去，不然刷新页面可能会导致空白
       next({ ...to, replace: true });
@@ -78,9 +53,6 @@ router.beforeEach(async (to, from, next) => {
       //     router.push(to.path)
       // }else {next()}
     }
-  } else {
-    // 无token
-    next({ path: '/login' });
   }
 });
 router.afterEach((to) => {
