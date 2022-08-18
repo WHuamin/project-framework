@@ -113,6 +113,7 @@ service.interceptors.response.use(
     if (response.data.code === 200) {
       return response.data.data;
     } else {
+      ElMessage.error(response.data.msg);
       return Promise.reject(response.data);
     }
   },
@@ -120,11 +121,13 @@ service.interceptors.response.use(
     console.log(error);
     // 从 pendingRequest对象中移除请求
     removePendingRequest(error.config || {});
+
     if (service.isCancel(error)) {
       console.log(error.message);
     } else {
       // 自行处理异常请求
     }
+
     if (error && error.response) {
       // 1.公共错误处理
       // 2.根据响应码具体处理
@@ -134,7 +137,6 @@ service.interceptors.response.use(
         `连接错误${error.response.status}`;
       switch (errorStatus) {
         case 401:
-          ElMessage.error(error.message);
           router.replace({ name: 'login' });
           break;
         case 404:

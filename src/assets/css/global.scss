@@ -4,13 +4,74 @@ body,
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 0;
-  margin: 0;
-}
-div {
-  box-sizing: border-box;
 }
 .fill-wrapper {
   width: 100%;
   height: 100%;
+}
+
+/* 弹性盒子 */
+@mixin flex-box(
+  $direction: row,
+  $justify-content: flex-start,
+  $align-items: center,
+  $wrap: no-wrap
+) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify-content;
+  align-items: $align-items;
+  flex-wrap: $wrap;
+  .flex-1 {
+    flex: 1 0 0;
+  }
+}
+
+/* 文字配置 */
+@mixin text-config($size: 14px, $color: #000, $weight: 200) {
+  line-height: calc($size + 8px);
+  font-size: $size;
+  color: $color;
+  font-weight: $weight;
+  text-align: justify;
+  text-justify: distribute-all-lines; /* 这行必加，兼容ie浏览器 */
+}
+
+/* 容器配置 */
+@mixin box-config(
+  $width: auto,
+  $height: auto,
+  $padding: 16px,
+  $radius: 4px,
+  $bg-color: transparent,
+  $shadow: 0px 0px 16px 0px #000
+) {
+  width: $width;
+  height: $height;
+  padding: $padding;
+  border-radius: $radius;
+  background-color: $bg-color;
+  box-shadow: $shadow;
+}
+
+/* 正文 */
+$base: 14px, #fff;
+$sub-title: 16px, #000, 600;
+.text-base {
+  @include text-config($base...);
+}
+
+/* 标题 正常*/
+.title-base {
+  @include text-config(18px, #000, 600);
+}
+
+/* 标题 小标题*/
+.title-sub {
+  @include text-config($sub-title...);
+}
+
+/* 标题 大标题*/
+.title-large {
+  @include text-config(20px);
 }
