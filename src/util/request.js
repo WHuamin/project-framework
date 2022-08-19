@@ -122,7 +122,7 @@ service.interceptors.response.use(
     // 从 pendingRequest对象中移除请求
     removePendingRequest(error.config || {});
 
-    if (service.isCancel(error)) {
+    if (axios.isCancel(error)) {
       console.log(error.message);
     } else {
       // 自行处理异常请求

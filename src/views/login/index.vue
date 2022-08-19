@@ -45,9 +45,12 @@
   </div>
 </template>
 <script>
-import basicForm from '@/components/basicForm';
-import { websiteConfig } from '@/util/websiteConfig';
-import { getImageCode } from '@/api/auth';
+import { mapMutations } from 'vuex';
+import basicForm from '@components/basicForm';
+import { websiteConfig } from '@util/websiteConfig';
+import { getImageCode, doLogin } from '@api/auth';
+import { openFullScreen } from '@util/globalFn';
+
 export default {
   name: 'project-login',
   components: { basicForm },
@@ -60,7 +63,7 @@ export default {
           type: 'text',
           name: 'username',
           required: true,
-          default: '', // 默认值
+          default: '18888888888', // 默认值
           rules: [
             { required: true, message: '账号 必填' }
             // { type: 'number', message: '账号 必须是数字' }
@@ -70,7 +73,7 @@ export default {
           title: '密码',
           type: 'password',
           name: 'password',
-          default: '', // 默认值
+          default: 'Admin123', // 默认值
           required: true,
           rules: [{ required: true, message: '密码 必填' }]
         },
@@ -94,9 +97,28 @@ export default {
     this.updateCodeImg();
   },
   methods: {
+    ...mapMutations('user', ['updateToken', 'updateUserInfo']),
+    ...mapMutations('system', ['updateAuthMenus']),
     submitForm(data) {
-      console.log('submit!', data);
-      this.resetForm = true;
+      const loading = openFullScreen();
+      doLogin({
+        phoneNum: data.username,
+        loginMethod: 2,
+        imageCode: data.code,
+        imageCodePath: this.verify.id,
+        password: data.password
+      })
+        .then(({ accessToken, menu, user }) => {
+          this.updateToken(accessToken);
+          this.updateUserInfo(user);
+          this.updateAuthMenus();
+          this.$router.replace('/');
+          this.resetForm = true;
+        })
+        .finally((_) => {
+          this.updateCodeImg();
+          loading.close();
+        });
     },
     updateCodeImg() {
       getImageCode().then(({ imageBase64, requestId }) => {

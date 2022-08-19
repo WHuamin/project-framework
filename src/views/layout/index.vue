@@ -1,7 +1,7 @@
 <template>
   <el-container class="fill-wrapper">
     <el-aside
-      class="flex-column-box layout-aside"
+      class="layout-aside"
       :class="{ 'layout-aside-collapse': isCollapse }"
     >
       <div class="layout-aside-logo">
@@ -42,7 +42,7 @@
       </div>
     </el-aside>
     <el-container>
-      <el-header class="layout-header flex-row-center">
+      <el-header class="layout-header">
         <el-icon :size="24" @click="changeMenuCollapse">
           <Fold v-show="!isCollapse" />
           <Expand v-show="isCollapse" />
@@ -50,12 +50,14 @@
         <div class="flex-1 header-title">
           {{ systemTitle }}
         </div>
+
+        <el-avatar
+          :size="50"
+          src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+        />
         <el-dropdown @command="handleCommand">
           <div class="flex-row-center el-dropdown-link">
-            <el-avatar
-              :size="50"
-              src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-            />
+            {{ userInfo.account || '' }}
             <el-icon class="el-icon--right"><arrow-down /></el-icon>
           </div>
           <template #dropdown>
@@ -97,7 +99,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
-import { websiteConfig } from '@/util/websiteConfig';
+import { websiteConfig } from '@util//websiteConfig';
 
 export default defineComponent({
   name: 'page-layout',
@@ -117,7 +119,7 @@ export default defineComponent({
     this.defaultOpeneds = this.openPages.map((item) => item.name);
   },
   computed: {
-    ...mapGetters(['openPages', 'userAuthMenus', 'activePageName'])
+    ...mapGetters(['openPages', 'userAuthMenus', 'activePageName', 'userInfo'])
   },
   methods: {
     ...mapMutations('system', ['removeOpenPage']),
@@ -142,21 +144,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.flex-row-center {
-  display: flex;
-  align-items: center;
-  .flex-1 {
-    flex: 1 0 0;
-  }
-}
-.flex-column-box {
-  display: flex;
-  flex-direction: column;
-  .flex-1 {
-    flex: 1 0 0;
-  }
-}
 .layout {
+  @include flex-box(column);
   $height: 80px;
   $space: 16px;
   &-aside {
@@ -176,6 +165,7 @@ export default defineComponent({
     width: 68px;
   }
   &-header {
+    @include flex-box();
     height: $height;
     padding: $space;
   }

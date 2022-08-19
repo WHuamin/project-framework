@@ -2,14 +2,20 @@ export default {
   namespaced: true,
   state: {
     token: '',
-    userId: '',
-    name: '',
     avatar: '',
     // roles: ['superAdministrator'],
     roles: 'superAdministrator',
     userInfo: {}
   },
-  mutations: {},
+  mutations: {
+    // 更新token
+    updateToken(state, payload) {
+      state.token = payload;
+    },
+    updateUserInfo(state, payload) {
+      state.userInfo = payload;
+    }
+  },
   actions: {
     //  登录
     doLogin({ commit }, payload) {

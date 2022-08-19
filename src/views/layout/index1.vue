@@ -100,7 +100,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { websiteConfig } from '@/util/websiteConfig';
+import { websiteConfig } from '@util//websiteConfig';
 
 export default defineComponent({
   name: 'page-layout',

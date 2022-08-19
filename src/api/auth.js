@@ -1,4 +1,4 @@
-import request from '@/util/request';
+import request from '@util//request';
 
 // 获取验证码图片
 export function getImageCode(params) {
@@ -7,9 +7,9 @@ export function getImageCode(params) {
 
 // pc登录
 export function doLogin(data) {
-  return {
+  return request({
     url: '/gyzf-auth/auth/pc-login',
     method: 'post',
     data
-  };
+  });
 }

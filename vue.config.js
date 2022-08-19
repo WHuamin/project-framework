@@ -27,6 +27,8 @@ module.exports = defineConfig({
     // 添加别名
     config.resolve.alias
       .set('@', resolve('src'))
+      .set('@util', resolve('src/util'))
+      .set('@api', resolve('src/api'))
       .set('@images', resolve('src/assets/images'))
       .set('@components', resolve('src/components'));
 
