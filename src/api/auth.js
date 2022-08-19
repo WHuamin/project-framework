@@ -13,3 +13,18 @@ export function doLogin(data) {
     data
   });
 }
+
+// 全部公司
+export function getAllDepartment(params) {
+  return request({
+    url: '/gyzf-auth/sysdepartment/all-department',
+    method: 'get',
+    params
+  }).then((res) => {
+    if (!(res instanceof Array)) return [];
+    return res.map((item) => ({
+      value: item.id,
+      label: item.name
+    }));
+  });
+}

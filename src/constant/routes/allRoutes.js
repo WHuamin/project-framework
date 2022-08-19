@@ -1,60 +1,54 @@
-// 房源模块
-export const housing = [
+import housing from './housing';
+export default [
   {
-    name: 'housingProject', // 确保唯一
-    page: 'project/housing', // 页面路径
-    routeUrl: 'project', // 页面路由
-    title: '项目列表',
-    permission: ['superAdministrator', 'administrator'], // 页面访问权限
-    meta: {
-      keepAlive: true // 是否缓存
-    },
-    isMenu: true, // 是否是菜单选项
-    menu: {
-      icon: 'location'
-    }, // 菜单配置
-    children: [
-      {
-        name: 'addHousingProject',
-        page: 'project/form',
-        routeUrl: 'add',
-        title: '新增房源项目',
-        permission: ['superAdministrator', 'administrator']
-      },
-      {
-        name: 'housingProjectDetail',
-        page: '/project/detail',
-        routeUrl: 'detail',
-        title: '查看房源项目',
-        permission: ['superAdministrator', 'administrator']
-      }
-    ]
+    title: '可视化大数据',
+    name: 'visualData',
+    // page: 'bigData', // 页面路径
+    routeUrl: '/visualData',
+    permission: ['superAdministrator', 'administrator'],
+    icon: 'location'
   },
   {
-    name: 'village',
-    page: 'village/index',
-    routeUrl: 'village',
-    title: '小区列表',
+    title: '房源管理',
+    name: 'housing',
+    routeUrl: '/housing',
+    icon: 'location',
     permission: ['superAdministrator', 'administrator'],
-    isMenu: true, // 是否是菜单选项
-    menu: {
-      icon: 'location'
-    }, // 菜单配置
-    children: [
-      {
-        name: 'addVillage',
-        page: 'village/form',
-        routeUrl: 'add',
-        title: '新增小区',
-        permission: ['superAdministrator', 'administrator']
-      },
-      {
-        name: 'villageDetail',
-        page: 'village/detail',
-        routeUrl: 'detail',
-        title: '查看小区',
-        permission: ['superAdministrator', 'administrator']
-      }
-    ]
+    children: housing
+  },
+  {
+    title: '合同管理',
+    name: 'contract',
+    routeUrl: '/contract',
+    permission: ['superAdministrator', 'administrator'],
+    icon: 'location'
+  },
+  {
+    title: '租户管理',
+    name: 'tenant',
+    routeUrl: '/tenant',
+    permission: ['superAdministrator', 'administrator'],
+    icon: 'location'
+  },
+  {
+    title: '财务管理',
+    name: 'finance',
+    routeUrl: '/finance',
+    permission: ['superAdministrator', 'administrator'],
+    icon: 'location'
+  },
+  {
+    title: '报表管理',
+    name: 'report',
+    routeUrl: '/report',
+    permission: ['superAdministrator', 'administrator'],
+    icon: 'location'
+  },
+  {
+    title: '系统管理',
+    name: 'system',
+    routeUrl: '/system',
+    permission: ['superAdministrator', 'administrator'],
+    icon: 'location'
   }
 ];

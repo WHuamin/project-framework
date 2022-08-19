@@ -30,7 +30,8 @@ module.exports = defineConfig({
       .set('@util', resolve('src/util'))
       .set('@api', resolve('src/api'))
       .set('@images', resolve('src/assets/images'))
-      .set('@components', resolve('src/components'));
+      .set('@components', resolve('src/components'))
+      .set('@columns', resolve('src/constant/columns'));
 
     // 压缩代码
     // config.optimization.minimize(true);

@@ -8,6 +8,8 @@ const getters = {
   openPages: (state) => state.system.openPages,
   activePageName: (state) => state.system.activePage?.name,
   roles: (state) => state.user.roles,
-  userAuthMenus: (state) => state.system.authMenus
+  userAuthMenus: (state) => state.system.authMenus,
+  isSubsidiary: (state) => state.user.userInfo.unitType === 2,
+  orgId: (state) => state.user.userInfo.orgId
 };
 export default getters;

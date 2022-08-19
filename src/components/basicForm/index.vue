@@ -1,6 +1,6 @@
 <template>
   <el-form
-    label-suffix="-"
+    label-suffix=":"
     size="default"
     scroll-to-error
     ref="basicForm"
@@ -107,14 +107,6 @@
   </el-form>
 </template>
 <script>
-/**
- * v-bind="$props"
- * 可以将父组件的所有props下发给它的子组件,子组件需要在其props:{} 中定义要接受的props。
- *
- * v-bind="$attrs":
- * 将调用组件时的组件标签上绑定的非props的特性(class和style除外)向下传递。
- * 在子组件中应当添加 inheritAttrs: false(避免父作用域的不被认作props的特性绑定应用在子组件的根元素上)。
- */
 export default {
   name: 'basic-form',
   inheritAttrs: false,

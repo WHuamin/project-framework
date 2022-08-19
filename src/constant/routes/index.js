@@ -3,23 +3,31 @@
  * @param {String} userRole 超级管理员 super administrator  管理员 administrator 审核员 auditor 操作员 operator
  * @returns {Object} 页面路由 权限菜单
  */
-import { housing } from './allRoutes';
+import allRoutes from './allRoutes';
 
-export default function (userRole) {
-  const authRoutes = getAuthRoutes(userRole);
-  const authMenus = getAuthMenus(userRole);
-  return {
-    authRoutes,
-    authMenus
-  };
-}
-function _loadView(view) {
-  // return (resolve) => require([`@/views/${view}.vue`], resolve);
-  return () => import(`@/views/${view}.vue`);
-}
-// 获取权限对应可访问的页面路由
-export function getAuthRoutes(userRole) {
-  return _handleAuthRouteList(userRole, housing, 'layout');
+// 处理权限菜单
+function _handleMenuList(userRole, list = [], menuLevel = 0) {
+  const authMenus = [];
+  list.forEach((item) => {
+    if (item.isMenu && item.permission.includes(userRole)) {
+      const theMenu = {
+        ...(item.menu || {}),
+        title: item.title,
+        name: item.name,
+        routeUrl: item.routeUrl,
+        menuLevel
+      };
+      if (item?.children?.length) {
+        theMenu.children = _handleMenuList(
+          userRole,
+          item.children,
+          ++menuLevel
+        );
+      }
+      authMenus.push(theMenu);
+    }
+  });
+  return authMenus;
 }
 
 function _handleAuthRouteList(userRole, list = [], parentRoute = '') {
@@ -59,43 +67,28 @@ function _handleAuthRouteList(userRole, list = [], parentRoute = '') {
   return authRoutes;
 }
 
+function _loadView(view) {
+  // return (resolve) => require([`@/views/${view}.vue`], resolve);
+  return () => import(`@/views/${view}.vue`);
+}
+
+export default function (userRole) {
+  const authRoutes = getAuthRoutes(userRole);
+  const authMenus = getAuthMenus(userRole);
+  return {
+    authRoutes,
+    authMenus
+  };
+}
+
+// 获取权限对应可访问的页面路由
+export function getAuthRoutes(userRole) {
+  return _handleAuthRouteList(userRole, allRoutes, 'layout');
+}
+
 // 获取权限菜单
 export function getAuthMenus(userRole) {
   let menuLevel = 0;
-  const authMenus = [
-    {
-      title: '房源管理',
-      name: 'housing',
-      routeUrl: '/housing',
-      icon: 'location',
-      menuLevel,
-      children: _handleMenuList(userRole, housing, ++menuLevel)
-    }
-  ];
-  return authMenus;
-}
-
-// 处理权限菜单
-function _handleMenuList(userRole, list = [], menuLevel = 0) {
-  const authMenus = [];
-  list.forEach((item) => {
-    if (item.isMenu && item.permission.includes(userRole)) {
-      const theMenu = {
-        ...(item.menu || {}),
-        title: item.title,
-        name: item.name,
-        routeUrl: item.routeUrl,
-        menuLevel
-      };
-      if (item?.children?.length) {
-        theMenu.children = _handleMenuList(
-          userRole,
-          item.children,
-          ++menuLevel
-        );
-      }
-      authMenus.push(theMenu);
-    }
-  });
+  const authMenus = _handleMenuList(userRole, allRoutes, ++menuLevel);
   return authMenus;
 }

@@ -88,7 +88,7 @@
         </el-tabs>
       </el-row>
       <el-main class="layout-main">
-        <el-scrollbar>
+        <el-scrollbar style="padding: 0 16px">
           <router-view />
         </el-scrollbar>
       </el-main>
@@ -114,7 +114,6 @@ export default defineComponent({
   },
   created() {
     const defaultRouteName = this.$route.name;
-    this.$store.dispatch('user/doLogin');
     this.defaultActiveMenu = defaultRouteName;
     this.defaultOpeneds = this.openPages.map((item) => item.name);
   },
@@ -174,7 +173,9 @@ export default defineComponent({
     padding: 0;
 
     ::v-deep .el-scrollbar__view {
-      padding: $space;
+      // padding: $space;
+      height: 100%;
+      min-height: 100%;
     }
   }
 }

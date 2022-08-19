@@ -17,13 +17,20 @@ export default {
   mutations: {
     // 更新已打开的页面
     updateOpenPages(state, payload) {
+      const { fullPath, meta = {}, name, path } = payload;
       const thePageIndex = state.openPages.findIndex(
-        (item) => item.name === payload.name
+        (item) => item.name === name
       );
+      const pageObj = {
+        fullPath,
+        meta,
+        name,
+        path
+      };
       if (thePageIndex > -1) {
-        state[thePageIndex] = payload;
+        state[thePageIndex] = pageObj;
       } else {
-        state.openPages.push(payload);
+        state.openPages.push(pageObj);
       }
     },
     // 更新用户权限菜单
