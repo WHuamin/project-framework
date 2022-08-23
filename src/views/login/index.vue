@@ -45,10 +45,10 @@
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import basicForm from '@components/basicForm';
 import { websiteConfig } from '@util/websiteConfig';
-import { getImageCode, doLogin } from '@api/auth';
+import { getImageCode } from '@api/auth';
 import { openFullScreen } from '@util/globalFn';
 
 export default {
@@ -99,21 +99,22 @@ export default {
   methods: {
     ...mapMutations('user', ['updateToken', 'updateUserInfo']),
     ...mapMutations('system', ['updateAuthMenus']),
+    ...mapActions('user', ['doLogin']),
     submitForm(data) {
       const loading = openFullScreen();
-      doLogin({
+      this.doLogin({
         phoneNum: data.username,
         loginMethod: 2,
         imageCode: data.code,
         imageCodePath: this.verify.id,
         password: data.password
       })
-        .then(({ accessToken, menu, user }) => {
-          this.updateToken(accessToken);
-          this.updateUserInfo(user);
-          this.updateAuthMenus();
+        .then(() => {
           this.$router.replace('/');
           this.resetForm = true;
+        })
+        .catch((err) => {
+          console.log(err);
         })
         .finally((_) => {
           this.updateCodeImg();

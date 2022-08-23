@@ -3,7 +3,8 @@ export default [
   {
     title: '可视化大数据',
     name: 'visualData',
-    // page: 'bigData', // 页面路径
+    isMenu: true,
+    page: 'visualData/index', // 页面路径
     routeUrl: '/visualData',
     permission: ['superAdministrator', 'administrator'],
     icon: 'location'
@@ -11,44 +12,56 @@ export default [
   {
     title: '房源管理',
     name: 'housing',
-    routeUrl: '/housing',
+    isMenu: true,
+    routeUrl: 'housing',
     icon: 'location',
+    parentRoute: 'layout',
     permission: ['superAdministrator', 'administrator'],
     children: housing
-  },
-  {
-    title: '合同管理',
-    name: 'contract',
-    routeUrl: '/contract',
-    permission: ['superAdministrator', 'administrator'],
-    icon: 'location'
-  },
-  {
-    title: '租户管理',
-    name: 'tenant',
-    routeUrl: '/tenant',
-    permission: ['superAdministrator', 'administrator'],
-    icon: 'location'
-  },
-  {
-    title: '财务管理',
-    name: 'finance',
-    routeUrl: '/finance',
-    permission: ['superAdministrator', 'administrator'],
-    icon: 'location'
-  },
-  {
-    title: '报表管理',
-    name: 'report',
-    routeUrl: '/report',
-    permission: ['superAdministrator', 'administrator'],
-    icon: 'location'
-  },
-  {
-    title: '系统管理',
-    name: 'system',
-    routeUrl: '/system',
-    permission: ['superAdministrator', 'administrator'],
-    icon: 'location'
   }
+  // ,{
+  //   title: '合同管理',
+  //   name: 'contract',
+  //   isMenu: true,
+  //   routeUrl: 'contract',
+  //   parentRoute: 'layout',
+  //   permission: ['superAdministrator', 'administrator'],
+  //   icon: 'location'
+  // },
+  // {
+  //   title: '租户管理',
+  //   name: 'tenant',
+  //   isMenu: true,
+  //   routeUrl: 'tenant',
+  //   parentRoute: 'layout',
+  //   permission: ['superAdministrator', 'administrator'],
+  //   icon: 'location'
+  // },
+  // {
+  //   title: '财务管理',
+  //   name: 'finance',
+  //   isMenu: true,
+  //   routeUrl: 'finance',
+  //   parentRoute: 'layout',
+  //   permission: ['superAdministrator', 'administrator'],
+  //   icon: 'location'
+  // },
+  // {
+  //   title: '报表管理',
+  //   name: 'report',
+  //   isMenu: true,
+  //   routeUrl: 'report',
+  //   parentRoute: 'layout',
+  //   permission: ['superAdministrator', 'administrator'],
+  //   icon: 'location'
+  // },
+  // {
+  //   title: '系统管理',
+  //   name: 'system',
+  //   isMenu: true,
+  //   routeUrl: 'system',
+  //   parentRoute: 'layout',
+  //   permission: ['superAdministrator', 'administrator'],
+  //   icon: 'location'
+  // }
 ];

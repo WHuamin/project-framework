@@ -110,9 +110,18 @@ service.interceptors.response.use(
 
     // 从 pendingRequest对象中移除请求
     removePendingRequest(response.config);
-    if (response.data.code === 200) {
+    const respCode = response.data.code;
+    console.log(respCode);
+    if (respCode === 200) {
       return response.data.data;
     } else {
+      if ([401, 403].includes(respCode)) {
+        store.dispatch('user/doLogout').then(() => {
+          router.replace('/login');
+        });
+      } else if ([404, 500].includes(respCode)) {
+        router.replace('/error/' + respCode);
+      }
       ElMessage.error(response.data.msg);
       return Promise.reject(response.data);
     }

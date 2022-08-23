@@ -1,11 +1,11 @@
+import { villageOptions } from '../auditStatus';
+
 export const villageColumns = [
   {
     prop: 'residentialName',
     label: '小区名称',
     type: 'link',
-    width: 180,
-    isSearch: true,
-    searchType: 'select'
+    width: 180
   },
   {
     prop: 'projectName',
@@ -39,9 +39,12 @@ export const villageColumns = [
     width: 180
   },
   {
-    prop: 'examineStatusName',
+    prop: 'examineStatus',
     label: '审核状态',
     width: 90,
-    align: 'center'
+    align: 'center',
+    isSearch: true,
+    searchType: 'select',
+    options: villageOptions
   }
 ];

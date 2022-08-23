@@ -10,7 +10,12 @@ body,
   height: 100%;
 }
 
-/* 弹性盒子 */
+/**
+* 弹性盒子
+* justify-content属性定义了项目在主轴上的对齐方式
+* align-items属性定义项目在交叉轴上如何对齐，如下面的方向为从上到下
+* justify-items属性，设置 网格项中的内容沿着主轴上的对齐方式，适用于容器内的所有网格项。
+*/
 @mixin flex-box(
   $direction: row,
   $justify-content: flex-start,

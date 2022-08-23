@@ -3,12 +3,20 @@
     <basic-table
       :columns="tableColumns"
       :loadTableData="loadingTable"
+      :operate="{
+        name: 'village',
+        column: { width: '180px', fixed: 'right' }
+      }"
       @link="bindTableLink"
+      @operate="handleOperate"
     >
-      <!-- <template #zip="{ data, column }"> {{ data[column.prop] }}</template> -->
-      <template #operate="{ data }">
-        <el-button type="text">编辑{{ data.id }}</el-button>
+      <template #tableNav>
+        <el-button type="primary" @click="handleOperate({ name: 'add' })"
+          >新增小区</el-button
+        >
       </template>
+      <!-- <template #zip="{ data, column }"> {{ data[column.prop] }}</template> -->
+      <!-- <template #operate="{ data }"></template> -->
     </basic-table>
   </div>
 </template>
@@ -16,6 +24,7 @@
 import basicTable from '@components/basicTable';
 import { fetchVillages } from '@api/house.js';
 import { villageColumns } from '@columns/villageList.js';
+
 export default {
   name: 'housing-village',
   components: { basicTable },
@@ -28,9 +37,23 @@ export default {
     bindTableLink(name, data) {
       console.log(name, data);
     },
+    handleOperate({ name, data }) {
+      switch (name) {
+        case 'add':
+          this.$router.push({ name: 'addVillage', query: { id: '' } });
+          break;
+        case 'edit':
+          this.$router.push({ name: 'addVillage', query: { id: data.id } });
+          break;
+        case 'device':
+          this.$router.push({ name: 'addVillage', query: { id: data.id } });
+          break;
+      }
+    },
     loadingTable(pagingParams) {
       return fetchVillages(pagingParams).then((res) => {
-        const records = res.records.map((item) => {
+        console.log(res);
+        const records = (res.records || []).map((item) => {
           let { residentialAddress, storageCode, residentialAddressName } =
             item;
           if (storageCode) {

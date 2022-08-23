@@ -6,9 +6,14 @@
     v-bind="$attrs"
     :model="searchForm"
   >
+    <!-- 公司 -->
     <template v-if="!isSubsidiary">
       <el-form-item name="orgId" label="公司名称">
-        <el-select v-model="searchForm.orgId">
+        <el-select
+          v-model="searchForm.orgId"
+          placeholder="请选择 公司名称"
+          @change="resetSearch"
+        >
           <el-option label="全部公司" value=""></el-option>
           <el-option
             v-for="item of departments"
@@ -18,6 +23,22 @@
         </el-select>
       </el-form-item>
     </template>
+    <!-- 小区 -->
+    <template v-if="showVillage.visible">
+      <el-form-item
+        name="village"
+        :label="showVillage.title"
+        @change="resetSearch"
+      >
+        <el-select
+          v-model="searchForm.village"
+          :placeholder="'请选择 ' + showVillage.title"
+        >
+          <el-option v-for="item in villages" :key="item.value" v-bind="item" />
+        </el-select>
+      </el-form-item>
+    </template>
+
     <template v-for="formItem in formItems" :key="formItem.name">
       <el-form-item
         class="basic-form-item"
@@ -37,13 +58,19 @@
             v-bind="formItem"
             v-model="searchForm[formItem.name]"
             :placeholder="'请选择 ' + formItem.title"
+            @change="resetSearch"
           >
-            <el-option
+            <!-- <el-option
               v-for="item in formItem.options"
               :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+              :label="items.label"
+              :value="items.value"
+            /> -->
+            <el-option
+              v-for="item of formItem.options"
+              :key="item.value"
+              v-bind="item"
+            ></el-option>
           </el-select>
         </template>
 
@@ -92,10 +119,18 @@ export default {
     resetForm: {
       type: Boolean,
       default: false
+    },
+    // 是否需要小区
+    showVillage: {
+      type: Object,
+      default: () => ({
+        visible: true,
+        title: '小区',
+        value: '' // 默认值
+      })
     }
   },
   data() {
-    console.log('---123321---', this.isSubsidiary);
     return {
       searchForm: {},
       departments: [],
@@ -110,26 +145,30 @@ export default {
   },
   methods: {
     toSearchForm() {
-      this.$emit('search', { ...this.searchForm });
+      this.$emit('search', { ...this.searchForm }, false);
     },
-    _resetForm() {
-      if (!this.$refs.searchForm) return;
-      this.$refs.searchForm.resetFields();
+    resetSearch() {
+      this.$emit('search', { ...this.searchForm }, true);
+    },
+    async _resetForm() {
+      // if (!this.$refs.searchForm) return;
+      // this.$refs.searchForm.resetFields();
       this.formItems.forEach((item) => {
         this.searchForm[item.name] = item.default || '';
       });
       if (this.isSubsidiary) {
         this.searchForm.orgId = this.orgId;
-        this.getAllOptions();
+      } else {
+        this.searchForm.orgId = '';
+        this.departments = await getAllDepartment();
       }
-    },
-
-    async getAllOptions() {
-      this.departments = await getAllDepartment();
-      this.villages = await getAllVillages({
-        orgId: this.orgId,
-        roleEliminate: true
-      });
+      if (this.showVillage.visible) {
+        this.villages = await getAllVillages({
+          orgId: this.orgId,
+          roleEliminate: true
+        });
+        this.searchForm.village = this.showVillage.value;
+      }
     }
   }
 };

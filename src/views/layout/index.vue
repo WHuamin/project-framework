@@ -18,25 +18,32 @@
             text-color="#fff"
             active-text-color="#409EFF"
           >
-            <el-sub-menu
-              v-for="item in userAuthMenus"
-              :key="item.name"
-              :index="item.name"
-            >
-              <template #title>
-                <el-icon><location /></el-icon>
-                <span>{{ item.title }}</span>
-              </template>
+            <template v-for="item in userAuthMenus" :key="item.name">
               <template v-if="item.children && item.children.length">
-                <el-menu-item
-                  v-for="subitem in item.children"
-                  :key="subitem.name"
-                  :index="subitem.name"
-                  @click="changeActiveMenu"
-                  >{{ subitem.title }}</el-menu-item
-                >
+                <el-sub-menu :index="item.name">
+                  <template #title>
+                    <el-icon><location /></el-icon>
+                    <span>{{ item.title }}</span>
+                  </template>
+                  <el-menu-item
+                    v-for="subitem in item.children"
+                    :key="subitem.name"
+                    :index="subitem.name"
+                    @click="changeActiveMenu($event)"
+                    >{{ subitem.title }}</el-menu-item
+                  >
+                </el-sub-menu>
               </template>
-            </el-sub-menu>
+              <template v-else>
+                <el-menu-item
+                  :key="item.name"
+                  :index="item.name"
+                  @click="changeActiveMenu($event)"
+                >
+                  {{ item.title }}
+                </el-menu-item>
+              </template>
+            </template>
           </el-menu>
         </el-scrollbar>
       </div>
@@ -98,7 +105,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { websiteConfig } from '@util//websiteConfig';
 
 export default defineComponent({
@@ -118,15 +125,28 @@ export default defineComponent({
     this.defaultOpeneds = this.openPages.map((item) => item.name);
   },
   computed: {
-    ...mapGetters(['openPages', 'userAuthMenus', 'activePageName', 'userInfo'])
+    ...mapGetters([
+      'openPages',
+      'userAuthMenus',
+      'activePageName',
+      'userInfo',
+      'notInLayout'
+    ])
   },
   methods: {
     ...mapMutations('system', ['removeOpenPage']),
+    ...mapActions('user', ['doLogout']),
     isHomePage(data) {
       return data.name === 'home';
     },
     handleCommand(val) {
-      console.log(val);
+      switch (val) {
+        case 'logout':
+          this.doLogout().then(() => {
+            this.$router.replace('/login');
+          });
+          break;
+      }
     },
     changeMenuCollapse() {
       this.isCollapse = !this.isCollapse;
@@ -136,7 +156,11 @@ export default defineComponent({
       this.$router.replace({ name: paneName });
     },
     changeActiveMenu({ index }) {
-      this.$router.replace({ name: index });
+      if (this.notInLayout.includes(index)) {
+        this.$router.push({ name: index });
+      } else {
+        this.$router.replace({ name: index });
+      }
     }
   }
 });

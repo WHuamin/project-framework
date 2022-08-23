@@ -13,6 +13,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (!store.getters.token) {
+    isF = false;
     if (to.name === 'login') {
       next();
     } else {
@@ -27,7 +28,23 @@ router.beforeEach(async (to, from, next) => {
         next();
       }
     } else {
-      const res = await getAuthRoutes('superAdministrator');
+      const { list = [], notInLayout = [] } = await getAuthRoutes(
+        'superAdministrator'
+      );
+      // 将新生成的路由替换原路由
+      list.forEach((item) => {
+        /**
+         * 添加动态路由 addRoute
+         * 1.有children时， children对象的path 开头不能加 /
+         * 2. 有children时，父级一定要加上component
+         */
+        if (item.parentRoute) {
+          router.addRoute(item.parentRoute, item);
+        } else {
+          router.addRoute(item);
+        }
+      });
+
       // 获取当前默认路由
       const currenRoutes = router.options.routes;
       // 将404添加进去
@@ -38,12 +55,11 @@ router.beforeEach(async (to, from, next) => {
           redirect: '/error/404'
         });
       }
-      // 将新生成的路由替换原路由
-      res.forEach((item) => {
-        router.addRoute(item.parentRoute, item);
-      });
+
       // 更改控制生成路由次数的值
       isF = true;
+
+      store.commit('system/updateNotInLayout', notInLayout);
       updatePages(to);
       // 跳转
       // 确保addRoute()时动态添加的路由已经被完全加载上去，不然刷新页面可能会导致空白
@@ -60,6 +76,7 @@ router.afterEach((to) => {
     store.commit('system/updateActivePage', to.name);
   }
 });
+
 function isNoLoginPages(pageName) {
   if (!pageName) {
     return true;
