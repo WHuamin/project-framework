@@ -15,6 +15,7 @@
           :hide-required-asterisk="true"
           :formConfig="{ submitBtnText: '登 录' }"
           :formItems="formItems"
+          :submitConfirm="false"
           v-model:resetForm="resetForm"
           @submit="submitForm"
         >
@@ -46,14 +47,12 @@
 </template>
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import basicForm from '@components/basicForm';
 import { websiteConfig } from '@util/websiteConfig';
 import { getImageCode } from '@api/auth';
 import { openFullScreen } from '@util/globalFn';
 
 export default {
   name: 'project-login',
-  components: { basicForm },
   data() {
     return {
       websiteConfig,

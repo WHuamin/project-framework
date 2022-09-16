@@ -4,13 +4,11 @@ import store from '@/store';
 import router from '@/router';
 import NProgress from 'nprogress'; // 引入进度条
 import 'nprogress/nprogress.css'; // 引入进度条样式
-// import { projectUrl } from '@/config/ssoUrl';
 // import { ElMessage , MessageBox } from 'element-plus';
 import { ElMessage } from 'element-plus';
 // import { getToken, getUsername, removeToken } from '@/utils/auth';
 import { ERROR_AXIOS_MESSAGE } from '@/constant/error';
 const qs = require('qs');
-// import Qs from 'qs'
 
 // 禁止使用进度环
 NProgress.configure({
@@ -110,8 +108,8 @@ service.interceptors.response.use(
 
     // 从 pendingRequest对象中移除请求
     removePendingRequest(response.config);
+
     const respCode = response.data.code;
-    console.log(respCode);
     if (respCode === 200) {
       return response.data.data;
     } else {
@@ -127,7 +125,7 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    console.log(error);
+    console.log('error：', error);
     // 从 pendingRequest对象中移除请求
     removePendingRequest(error.config || {});
 
@@ -163,7 +161,7 @@ service.interceptors.response.use(
       }
     }
     ElMessage.error(error.message);
-    return Promise.reject(new Error(error));
+    return Promise.reject(error);
   }
 );
 

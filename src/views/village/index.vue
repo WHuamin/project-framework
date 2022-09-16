@@ -21,13 +21,11 @@
   </div>
 </template>
 <script>
-import basicTable from '@components/basicTable';
 import { fetchVillages } from '@api/house.js';
 import { villageColumns } from '@columns/villageList.js';
 
 export default {
   name: 'housing-village',
-  components: { basicTable },
   data() {
     return {
       tableColumns: villageColumns
@@ -35,7 +33,10 @@ export default {
   },
   methods: {
     bindTableLink(name, data) {
-      console.log(name, data);
+      this.$router.push({
+        name: 'villageDetail',
+        query: { id: data.id }
+      });
     },
     handleOperate({ name, data }) {
       switch (name) {
@@ -48,11 +49,19 @@ export default {
         case 'device':
           this.$router.push({ name: 'addVillage', query: { id: data.id } });
           break;
+        case 'album':
+          this.$router.push({
+            name: 'villageAlbum',
+            query: {
+              id: data.id,
+              meta: JSON.stringify({ name: `${data.residentialName}相册管理` })
+            }
+          });
+          break;
       }
     },
     loadingTable(pagingParams) {
       return fetchVillages(pagingParams).then((res) => {
-        console.log(res);
         const records = (res.records || []).map((item) => {
           let { residentialAddress, storageCode, residentialAddressName } =
             item;

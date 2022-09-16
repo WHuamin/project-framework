@@ -33,6 +33,7 @@ export default {
           name,
           path
         };
+        console.log(pageObj);
         if (thePageIndex > -1) {
           state[thePageIndex] = pageObj;
         } else {

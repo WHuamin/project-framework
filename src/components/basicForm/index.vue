@@ -1,6 +1,6 @@
 <template>
   <el-form
-    label-suffix=":"
+    label-suffix="："
     size="default"
     scroll-to-error
     ref="basicForm"
@@ -71,12 +71,14 @@
             v-model="basicForm[formItem.name]"
             :placeholder="'请选择 ' + formItem.title"
           >
+            <!-- <template v-if="_isFuntion(formItem.options)"> -->
             <el-option
               v-for="item in formItem.options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             />
+            <!-- </template> -->
           </el-select>
         </template>
 
@@ -86,6 +88,15 @@
             v-model="basicForm[formItem.name]"
             :placeholder="'请选择 ' + formItem.title"
           />
+        </template>
+
+        <template v-else-if="formItem.type === 'cascader'">
+          <el-cascader
+            v-bind="formItem"
+            v-model="basicForm[formItem.name]"
+            :placeholder="'请选择 ' + formItem.title"
+            :options="formItem.options"
+          ></el-cascader>
         </template>
 
         <template v-else>
@@ -107,6 +118,7 @@
   </el-form>
 </template>
 <script>
+import { confirmMsg } from '../../util/messageDialog';
 export default {
   name: 'basic-form',
   inheritAttrs: false,
@@ -125,6 +137,11 @@ export default {
     resetForm: {
       type: Boolean,
       default: false
+    },
+    // 是否需要提交表单前确认操作
+    submitConfirm: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -152,27 +169,62 @@ export default {
       if (!this.$refs.basicForm) return;
       this.$refs.basicForm.validate((valid) => {
         if (!valid) return false;
-        this.$emit('submit', { ...this.basicForm });
+        if (this.submitConfirm) {
+          confirmMsg('确定提交？', '表单确认')
+            .then(() => {
+              this.$emit('submit', { ...this.basicForm });
+            })
+            .catch(() => {
+              console.log('cancel');
+            });
+        } else {
+          this.$emit('submit', { ...this.basicForm });
+        }
       });
     },
     _resetForm() {
       if (!this.$refs.basicForm) return;
       this.$refs.basicForm.resetFields();
+    },
+    _isFuntion(data) {
+      return data instanceof Function;
+    },
+    async _isFuntionOptions(data) {
+      return data instanceof Function ? await data() : data;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.form-row-box {
+  @include flex-box(row, space-between, center, wrap);
+  .basic-form-item {
+    width: calc(50% - 10px);
+  }
+}
 .basic-form-item {
   ::v-deep(.el-form-item__label) {
     display: block;
     min-width: 60px;
+    padding-left: 10px;
     text-align-last: justify;
     text-align: justify;
   }
+  ::v-deep(.el-select, .el-cascader) {
+    width: 100%;
+  }
+  ::v-deep(.el-cascader) {
+    width: 100%;
+  }
+}
+
+::v-deep(.basic-form-item.is-required:not(.is-no-asterisk)
+    > .el-form-item__label:before) {
+  position: absolute;
+  left: 18px;
 }
 .nav-btn {
-  display: flex;
-  justify-content: space-around;
+  width: 100%;
+  @include flex-box(row, space-around);
 }
 </style>

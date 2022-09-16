@@ -31,7 +31,6 @@ export default {
     async doLogin({ commit }, payload) {
       await doLogin(payload)
         .then((res) => {
-          console.log(res);
           const { accessToken, menu, user } = res;
           const userRole = 'superAdministrator';
           commit('updateToken', accessToken);

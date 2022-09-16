@@ -49,11 +49,50 @@ export default [
         permission: ['superAdministrator', 'administrator']
       },
       {
+        name: 'editVillage',
+        page: 'village/form',
+        routeUrl: 'edit',
+        title: '编辑小区',
+        permission: ['superAdministrator', 'administrator']
+      },
+      {
         name: 'villageDetail',
         page: 'village/detail',
         routeUrl: 'detail',
         title: '查看小区',
         permission: ['superAdministrator', 'administrator']
+      },
+      {
+        name: 'villageAlbum',
+        page: 'album/index',
+        routeUrl: 'album',
+        title: '相册管理',
+        permission: ['superAdministrator', 'administrator']
+        // children: [
+        //   {
+        //     name: '',
+        //     page: 'village/form',
+        //     routeUrl: 'add',
+        //     title: '新增小区',
+        //     permission: ['superAdministrator', 'administrator']
+        //   }
+        // ]
+      },
+      {
+        name: 'villageAlbumDetail',
+        page: 'album/detail',
+        routeUrl: 'album/:type',
+        title: '相册管理',
+        permission: ['superAdministrator', 'administrator']
+        // children: [
+        //   {
+        //     name: '',
+        //     page: 'village/form',
+        //     routeUrl: 'add',
+        //     title: '新增小区',
+        //     permission: ['superAdministrator', 'administrator']
+        //   }
+        // ]
       }
     ]
   }

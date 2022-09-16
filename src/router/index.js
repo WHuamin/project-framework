@@ -20,6 +20,17 @@ router.beforeEach(async (to, from, next) => {
       next({ name: 'login' });
     }
   } else {
+    // const { meta, ...theQuery } = to.query;
+    // if (meta) {
+    //   const changeRouteMeta = JSON.parse(meta);
+    //   console.log(changeRouteMeta);
+    //   to.meta = {
+    //     ...to.meta,
+    //     ...changeRouteMeta
+    //   };
+    //   to.query = theQuery;
+    // }
+
     if (isF) {
       updatePages(to);
       if (to.name === 'login') {

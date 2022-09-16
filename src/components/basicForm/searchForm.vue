@@ -1,11 +1,5 @@
 <template>
-  <el-form
-    label-suffix=":"
-    :inline="true"
-    ref="searchForm"
-    v-bind="$attrs"
-    :model="searchForm"
-  >
+  <el-form :inline="true" ref="searchForm" v-bind="$attrs" :model="searchForm">
     <!-- 公司 -->
     <template v-if="!isSubsidiary">
       <el-form-item name="orgId" label="公司名称">

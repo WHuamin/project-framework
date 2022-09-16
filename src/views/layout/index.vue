@@ -78,7 +78,7 @@
       </el-header>
       <el-row>
         <el-tabs
-          class="fill-wrapper"
+          class="fill-wrapper layout-tabs"
           type="card"
           :model-value="activePageName"
           @tab-click="changeActiveTab"
@@ -228,8 +228,8 @@ export default defineComponent({
     }
   }
 }
-.layout-main .el-tabs__content {
-  width: 100%;
-  height: calc(100% - 56px);
-}
+// .layout-main .el-tabs__content {
+//   width: 100%;
+//   height: calc(100% - 56px);
+// }
 </style>
